@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Luxury Commerce</title>
+
+    <!-- FONTS (CRITICAL FIX) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            /* DARK MODE DEFAULTS */
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --text-muted: #aaaaaa;
+            --accent-color: #c9a96e;
+            /* Luxury Gold */
+            --danger-color: #ff4444;
+            --action-blue: #2563eb;
+            --card-bg: #141414;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.15);
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-display: 'Playfair Display', 'Times New Roman', serif;
+            --cursor-size: 20px;
+
+            /* Navbar Logic - Dark Mode */
+            --nav-text-color: #ffffff;
+            --nav-bg-scrolled: rgba(10, 10, 10, 0.85);
+            --nav-text-scrolled: #ffffff;
+
+            /* Footer/Hero Defaults (Dark) */
+            --footer-bg: #000000;
+            --footer-text: #ffffff;
+
+            /* Gradient Layers (Dark) */
+            --bg-gradient-1: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            --bg-gradient-2: linear-gradient(to bottom, #0a0a0a, #111);
+            --placeholder-gradient: linear-gradient(45deg, #1a1a1a, #222);
+        }
+
+        [data-theme="light"] {
+            /* LIGHT MODE OVERRIDES */
+            --bg-color: #f4f4f4;
+            --text-color: #111111;
+            --text-muted: #666666;
+            --accent-color: #a68b55;
+            --card-bg: #ffffff;
+            --glass-bg: rgba(0, 0, 0, 0.03);
+            --border-color: rgba(0, 0, 0, 0.1);
+
+            /* Navbar Logic - Light Mode */
+            --nav-text-color: #ffffff;
+            --nav-bg-scrolled: #000000;
+            --nav-text-scrolled: #ffffff;
+
+            /* Gradient Layers (Light) */
+            --bg-gradient-1: radial-gradient(circle at 50% 50%, #ffffff 0%, #e0e0e0 100%);
+            --bg-gradient-2: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            --placeholder-gradient: linear-gradient(45deg, #e0e0e0, #f0f0f0);
+        }
+
+        /* --- FORCE DARK MODE ON HERO & FOOTER --- */
+        .hero,
+        footer {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --text-muted: #888888;
+            --border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+        }
+
+        [data-theme="light"] #bg-1.active {
+            opacity: 0 !important;
+        }
+
+        .hero {
+            background-color: #050505;
+        }
+
+        /* HIDE DEFAULT CURSOR */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        a,
+        button,
+        input,
+        select,
+        textarea {
+            cursor: none !important;
+        }
+
+        html.lenis {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.5;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100000;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        #cursor.hovered {
+            width: 40px;
+            height: 40px;
+            background: var(--text-color);
+            border-color: transparent;
+            mix-blend-mode: difference;
+        }
+
+        /* --- BACKGROUND GRADIENTS --- */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+        }
+
+        .bg-layer.active {
+            opacity: 1;
+        }
+
+        #bg-1 {
+            background: var(--bg-gradient-1);
+        }
+
+        #bg-2 {
+            background: var(--bg-gradient-2);
+        }
+
+        /* --- UTILITIES --- */
+        .display-text {
+            font-family: var(--font-display);
+            line-height: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- IMAGE PLACEHOLDER --- */
+        .img-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--placeholder-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 200%;
+            }
+        }
+
+        /* --- DYNAMIC LOGO --- */
+        #dynamic-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(3rem, 15vw, 10rem);
+            color: var(--logo-color, #ffffff);
+            z-index: 2000;
+            white-space: nowrap;
+            pointer-events: none;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            will-change: transform, top, left;
+            transition: color 0.5s ease;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            background: transparent;
+            z-index: 1000;
+            transition: all 0.5s ease;
+            color: var(--nav-text-color);
+        }
+
+        nav.scrolled-nav {
+            background-color: var(--nav-bg-scrolled) !important;
+            color: var(--nav-text-scrolled) !important;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .nav-content {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            height: 60px;
+        }
+
+        .nav-left {
+            justify-self: start;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-link {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .contact-link:hover {
+            opacity: 1;
+        }
+
+        .contact-link i {
+            font-size: 0.8rem;
+        }
+
+        .nav-center {
+            justify-self: center;
+        }
+
+        .logo-placeholder {
+            width: 120px;
+            height: 40px;
+            visibility: hidden;
+        }
+
+        .nav-right {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-icon-btn {
+            font-size: 1.2rem;
+            background: transparent;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent-color);
+            color: #000;
+            font-size: 0.6rem;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .menu-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            opacity: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #888;
+        }
+
+        /* --- MARQUEE --- */
+        .marquee-section {
+            background: var(--accent-color);
+            padding: 1.2rem 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 5;
+            margin-bottom: 5rem;
+            transform: none;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .marquee-track {
+            display: flex;
+            white-space: nowrap;
+            gap: 6rem;
+        }
+
+        .marquee-item {
+            color: #111;
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-style: italic;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .marquee-separator {
+            font-style: normal;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            transform: translateY(-2px);
+        }
+
+        [data-theme="light"] .marquee-item {
+            color: #fff;
+        }
+
+        /* --- SECTION TITLES --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--text-color);
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 300px;
+            text-align: right;
+        }
+
+        /* --- FLASH DEALS --- */
+        .flash-section {
+            padding: 5rem 0;
+            position: relative;
+            z-index: 5;
+        }
+
+        .flash-track-container {
+            overflow: hidden;
+            width: 100%;
+            display: flex;
+        }
+
+        .flash-track {
+            display: flex;
+            gap: 2rem;
+            width: max-content;
+        }
+
+        .flash-card {
+            width: 350px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            transition: transform 0.3s, border-color 0.3s, background-color 0.5s;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .flash-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-10px);
+        }
+
+        .flash-img-area {
+            height: 250px;
+            width: 100%;
+            border-radius: 2px;
+        }
+
+        .flash-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .flash-title {
+            font-size: 1.2rem;
+            font-family: var(--font-display);
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .flash-price {
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .flash-badge {
+            background: var(--danger-color);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            align-self: flex-start;
+        }
+
+        /* --- CATEGORIES --- */
+        .categories-section {
+            padding: 5rem 0;
+            position: relative;
+            z-index: 5;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .category-item {
+            background: var(--bg-color);
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .category-item:hover {
+            background: var(--card-bg);
+        }
+
+        .cat-icon {
+            font-size: 2rem;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .category-item:hover .cat-icon {
+            color: var(--accent-color);
+        }
+
+        .cat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-color);
+        }
+
+        /* --- SCROLLYTELLING PANELS --- */
+        .narrative-section {
+            position: relative;
+            padding-bottom: 10vh;
+            z-index: 5;
+        }
+
+        .sticky-panel {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            align-items: center;
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        .panel-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            gap: 5rem;
+        }
+
+        .panel-text {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .panel-num {
+            font-size: 5rem;
+            font-family: var(--font-display);
+            color: var(--border-color);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .panel-head {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+            color: var(--text-color);
+        }
+
+        .panel-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        .panel-visual {
+            height: 60vh;
+            border: 1px solid var(--border-color);
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-section {
+            padding: 12rem 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .cta-glow-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.15;
+            filter: blur(100px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cta-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .cta-heading {
+            line-height: 0.9;
+            margin-bottom: 3rem;
+        }
+
+        .cta-text-small {
+            display: block;
+            font-family: var(--font-main);
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-text-huge {
+            display: block;
+            font-family: var(--font-display);
+            font-size: clamp(5rem, 15vw, 12rem);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color) 20%, #fff 50%, var(--accent-color) 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shineText 5s linear infinite;
+        }
+
+        @keyframes shineText {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .cta-subtext {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            line-height: 1.6;
+            margin-bottom: 4rem;
+        }
+
+        .cta-btn {
+            background: transparent;
+            color: var(--text-color);
+            padding: 1.2rem 4rem;
+            border: 1px solid var(--accent-color);
+            border-radius: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--accent-color);
+            z-index: -1;
+            transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .cta-btn:hover {
+            color: #000;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(201, 169, 110, 0.3);
+        }
+
+        .cta-btn:hover::before {
+            width: 100%;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #000000;
+            color: #ffffff;
+            padding: 8rem 0 2rem 0;
+            position: relative;
+            z-index: 10;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 8rem;
+        }
+
+        .footer-brand h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: #888;
+            max-width: 300px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .newsletter-wrapper {
+            position: relative;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 1rem;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            outline: none;
+        }
+
+        .newsletter-input::placeholder {
+            color: #555;
+        }
+
+        .arrow-submit {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .footer-col h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-col a {
+            font-size: 1.1rem;
+            color: #fff;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-huge-text {
+            font-family: var(--font-display);
+            font-size: 18vw;
+            font-weight: 700;
+            color: #fff;
+            opacity: 0.05;
+            text-align: center;
+            line-height: 0.8;
+            user-select: none;
+            position: absolute;
+            bottom: -2vw;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #888;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal-text {
+            overflow: hidden;
+        }
+
+        .reveal-text>* {
+            transform: translateY(100%);
+        }
+
+        /* --- OVERLAYS & MODALS --- */
+        .overlay-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            z-index: 9999;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 4rem 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .overlay-container.active {
+            transform: translateX(0);
+        }
+
+        .overlay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .overlay-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--text-color);
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+            color: var(--accent-color);
+        }
+
+        /* Shop Specifics */
+        .shop-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .shop-filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .shop-filter-btn.active,
+        .shop-filter-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Cart Drawer */
+        #cart-overlay {
+            width: 100%;
+            max-width: 500px;
+            left: auto;
+            right: 0;
+            border-left: 1px solid var(--border-color);
+            background: var(--card-bg);
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            background: var(--placeholder-bg);
+            border-radius: 4px;
+        }
+
+        .cart-item-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .cart-item-info p {
+            color: var(--accent-color);
+        }
+
+        .cart-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-family: var(--font-display);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Auth Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .form-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: #000;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Search Overlay */
+        .search-input-large {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 4rem;
+            color: var(--text-color);
+            font-family: var(--font-display);
+            padding: 1rem 0;
+            outline: none;
+        }
+
+        /* Generic Page Content */
+        .page-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+
+        .page-content h3 {
+            color: var(--text-color);
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            font-family: var(--font-display);
+        }
+
+        .page-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #fff;
+            color: #000;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            z-index: 11000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            #dynamic-logo {
+                font-size: 15vw;
+            }
+
+            .nav-content {
+                grid-template-columns: 1fr auto;
+            }
+
+            .nav-left {
+                display: none;
+            }
+
+            .nav-center {
+                justify-self: start;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .section-subtitle {
+                text-align: left;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .panel-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .panel-visual {
+                height: 40vh;
+                order: -1;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .footer-huge-text {
+                font-size: 25vw;
+            }
+
+            .cta-heading {
+                font-size: 2.5rem;
+            }
+
+            .cta-subtext {
+                font-size: 0.95rem;
+                padding: 0 1rem;
+            }
+
+            .cta-btn {
+                padding: 1rem 2.5rem;
+                font-size: 0.9rem;
+            }
+
+            #cart-overlay {
+                max-width: 100%;
+            }
+
+            .search-input-large {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+
+    <!-- BACKGROUND -->
+    <div id="bg-1" class="bg-layer active"></div>
+    <div id="bg-2" class="bg-layer"></div>
+
+    <!-- LOGO -->
+    <h1 id="dynamic-logo">NEXUS</h1>
+
+    <!-- NAV -->
+    <nav id="navbar" class="hoverable">
+        <div class="container nav-content">
+            <!-- Left -->
+            <div class="nav-left">
+                <a href="#" class="contact-link hoverable" onclick="openPage('contact')">
+                    <i class="ph ph-plus"></i> Contact Us
+                </a>
+            </div>
+
+            <!-- Center -->
+            <div class="nav-center">
+                <div class="logo-placeholder" id="logo-dest"></div>
+            </div>
+
+            <!-- Right -->
+            <div class="nav-right">
+                <div class="nav-icons">
+                    <button class="nav-icon-btn hoverable" onclick="toggleCart()">
+                        <i class="ph ph-handbag"></i>
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </button>
+                    <button class="nav-icon-btn hoverable" onclick="toggleAuth()"><i class="ph ph-user"></i></button>
+                    <button class="nav-icon-btn hoverable" onclick="toggleSearch()"><i
+                            class="ph ph-magnifying-glass"></i></button>
+                    <button class="nav-icon-btn hoverable" id="themeBtn"><i class="ph ph-sun"></i></button>
+                </div>
+                <div class="menu-btn hoverable" onclick="toggleMenu()">
+                    <i class="ph ph-list"></i>
+                    <span>MENU</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero-sec">
+        <div class="scroll-indicator">SCROLL TO BEGIN</div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+            <span class="marquee-item">New Arrivals 2026 <span class="marquee-separator">✦</span> Global Shipping <span
+                    class="marquee-separator">✦</span> Luxury Defined <span class="marquee-separator">✦</span></span>
+        </div>
+    </div>
+
+    <!-- FLASH DEALS -->
+    <section class="flash-section container">
+        <div class="section-header reveal-on-scroll">
+            <h2 class="section-title">Flash Archive</h2>
+            <p class="section-subtitle">Exclusive drops. Limited time. No restocks.</p>
+        </div>
+
+        <div class="flash-track-container">
+            <div class="flash-track">
+                <!-- Card 1 -->
+                <div class="flash-card hoverable" onclick="addToCart('Sonic Pro', 299)">
+                    <span class="flash-badge">-30% OFF</span>
+                    <div class="img-placeholder flash-img-area">Sonic Pro</div>
+                    <div class="flash-meta">
+                        <div>
+                            <h3 class="flash-title">Sonic Pro</h3><span class="flash-price">$299</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="flash-card hoverable" onclick="addToCart('Nexus Watch', 199)">
+                    <span class="flash-badge">-40% OFF</span>
+                    <div class="img-placeholder flash-img-area">Nexus Watch</div>
+                    <div class="flash-meta">
+                        <div>
+                            <h3 class="flash-title">Series 5 Watch</h3><span class="flash-price">$199</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="flash-card hoverable" onclick="addToCart('Alpha Lens', 1200)">
+                    <span class="flash-badge">LIMITED</span>
+                    <div class="img-placeholder flash-img-area">Alpha Cam</div>
+                    <div class="flash-meta">
+                        <div>
+                            <h3 class="flash-title">Alpha Lens</h3><span class="flash-price">$1,200</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="flash-card hoverable" onclick="addToCart('Hammershoi', 85)">
+                    <span class="flash-badge">RARE</span>
+                    <div class="img-placeholder flash-img-area">Ceramic Vase</div>
+                    <div class="flash-meta">
+                        <div>
+                            <h3 class="flash-title">Hammershoi</h3><span class="flash-price">$85</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Duplicate -->
+                <div class="flash-card hoverable" onclick="addToCart('Sonic Pro', 299)">
+                    <span class="flash-badge">-30% OFF</span>
+                    <div class="img-placeholder flash-img-area">Sonic Pro</div>
+                    <div class="flash-meta">
+                        <div>
+                            <h3 class="flash-title">Sonic Pro</h3><span class="flash-price">$299</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories-section container">
+        <div class="section-header reveal-on-scroll">
+            <h2 class="section-title">The Edit</h2>
+            <p class="section-subtitle">Curated categories for the modern connoisseur.</p>
+        </div>
+        <div class="category-grid reveal-grid">
+            <div class="category-item hoverable" onclick="openShopCategory('Living')"><i
+                    class="ph ph-armchair cat-icon"></i><span class="cat-label">Living</span></div>
+            <div class="category-item hoverable" onclick="openShopCategory('Audio')"><i
+                    class="ph ph-headphones cat-icon"></i><span class="cat-label">Audio</span></div>
+            <div class="category-item hoverable" onclick="openShopCategory('Footwear')"><i
+                    class="ph ph-sneaker cat-icon"></i><span class="cat-label">Footwear</span></div>
+            <div class="category-item hoverable" onclick="openShopCategory('Timepieces')"><i
+                    class="ph ph-watch cat-icon"></i><span class="cat-label">Timepieces</span></div>
+            <div class="category-item hoverable" onclick="openShopCategory('Carry')"><i
+                    class="ph ph-bag cat-icon"></i><span class="cat-label">Carry</span></div>
+            <div class="category-item hoverable" onclick="openShopCategory('Eyewear')"><i
+                    class="ph ph-sunglasses cat-icon"></i><span class="cat-label">Eyewear</span></div>
+        </div>
+    </section>
+
+    <!-- SCROLLYTELLING -->
+    <section class="narrative-section">
+        <div class="sticky-panel">
+            <div class="panel-content">
+                <div class="panel-text">
+                    <div class="panel-num">01</div>
+                    <h2 class="panel-head">Engineered<br>Elegance</h2>
+                    <p class="panel-desc">We strip away the non-essential. What remains is pure form, function, and
+                        aesthetic clarity. A design language that speaks without shouting.</p>
+                </div>
+                <div class="img-placeholder panel-visual">Concept Visual</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section reveal-on-scroll">
+        <div class="cta-glow-bg"></div>
+        <div class="cta-content">
+            <span class="cta-label">The Next Step</span>
+            <h2 class="cta-heading">
+                <span class="cta-text-small">Ready to</span>
+                <span class="cta-text-huge">Elevate?</span>
+            </h2>
+            <p class="cta-subtext">Join the inner circle of connoisseurs who define luxury on their own terms.</p>
+            <button class="cta-btn hoverable" onclick="openPage('shop')">Begin The Journey</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Join the<br>Inner Circle.</h2>
+                    <p>Subscribe for early access to drops and exclusive atelier updates.</p>
+                    <div class="newsletter-wrapper">
+                        <input type="email" placeholder="Email Address" class="newsletter-input hoverable">
+                        <i class="ph ph-arrow-right arrow-submit hoverable"
+                            onclick="showToast('Subscribed to Newsletter')"></i>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a class="hoverable" onclick="openPage('shop')">Latest Drops</a></li>
+                        <li><a class="hoverable" onclick="openPage('shop')">Ready to Wear</a></li>
+                        <li><a class="hoverable" onclick="openPage('shop')">Objects</a></li>
+                        <li><a class="hoverable" onclick="openPage('archive')">Archive</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Maison</h4>
+                    <ul>
+                        <li><a class="hoverable" onclick="openPage('story')">Our Story</a></li>
+                        <li><a class="hoverable" onclick="openPage('sustainability')">Sustainability</a></li>
+                        <li><a class="hoverable" onclick="openPage('careers')">Careers</a></li>
+                        <li><a class="hoverable" onclick="openPage('press')">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Assistance</h4>
+                    <ul>
+                        <li><a class="hoverable" onclick="openPage('service')">Client Services</a></li>
+                        <li><a class="hoverable" onclick="openPage('shipping')">Shipping & Returns</a></li>
+                        <li><a class="hoverable" onclick="openPage('payment')">Secure Payment</a></li>
+                        <li><a class="hoverable" onclick="openPage('legal')">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 NEXUS Commerce. All Rights Reserved.</span>
+                <div style="display: flex; gap: 2rem;">
+                    <span class="hoverable" onclick="showToast('Instagram Link')">INSTAGRAM</span>
+                    <span class="hoverable" onclick="showToast('Twitter Link')">TWITTER</span>
+                    <span class="hoverable" onclick="showToast('LinkedIn Link')">LINKEDIN</span>
+                </div>
+            </div>
+        </div>
+        <h1 class="footer-huge-text">NEXUS</h1>
+    </footer>
+
+    <!-- OVERLAYS -->
+    <div class="overlay-container" id="cart-overlay">
+        <div class="overlay-header">
+            <h2 class="overlay-title">Your Cart</h2>
+            <button class="close-btn hoverable" onclick="toggleCart()"><i class="ph ph-x"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <p style="color: var(--text-muted); text-align: center; margin-top: 2rem;">Your cart is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total"><span>Total</span><span id="cart-total-price">$0</span></div>
+            <button class="checkout-btn hoverable" onclick="showToast('Checkout Initiated')">Checkout</button>
+        </div>
+    </div>
+
+    <div class="overlay-container" id="search-overlay">
+        <div class="overlay-header">
+            <h2 class="overlay-title">Search</h2>
+            <button class="close-btn hoverable" onclick="toggleSearch()"><i class="ph ph-x"></i></button>
+        </div>
+        <div class="container">
+            <input type="text" class="search-input-large" placeholder="Type to search..." autofocus>
+            <div style="margin-top: 4rem;">
+                <h4 style="color: var(--text-muted); margin-bottom: 2rem;">POPULAR SEARCHES</h4>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <span class="hoverable"
+                        style="border: 1px solid var(--border-color); padding: 0.5rem 1.5rem; border-radius: 50px;">Watches</span>
+                    <span class="hoverable"
+                        style="border: 1px solid var(--border-color); padding: 0.5rem 1.5rem; border-radius: 50px;">Audio</span>
+                    <span class="hoverable"
+                        style="border: 1px solid var(--border-color); padding: 0.5rem 1.5rem; border-radius: 50px;">Furniture</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-container" id="menu-overlay">
+        <div class="overlay-header">
+            <h2 class="overlay-title">Menu</h2>
+            <button class="close-btn hoverable" onclick="toggleMenu()"><i class="ph ph-x"></i></button>
+        </div>
+        <div class="container"
+            style="display: flex; flex-direction: column; gap: 2rem; font-size: 2rem; font-family: var(--font-display);">
+            <a onclick="openPage('shop')" class="hoverable">Shop Collection</a>
+            <a onclick="openPage('story')" class="hoverable">Our Story</a>
+            <a onclick="openPage('journal')" class="hoverable">Journal</a>
+            <a onclick="openPage('contact')" class="hoverable">Contact</a>
+            <a onclick="toggleAuth()" class="hoverable">Account</a>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-card">
+            <button class="close-btn hoverable" style="position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem;"
+                onclick="toggleAuth()"><i class="ph ph-x"></i></button>
+            <h2 class="modal-title">Welcome</h2>
+            <div class="form-group"><input type="email" class="form-input" placeholder="Email Address"></div>
+            <div class="form-group"><input type="password" class="form-input" placeholder="Password"></div>
+            <button class="form-btn hoverable" onclick="loginUser()">Sign In</button>
+            <p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted);">Don't have an account? <span
+                    style="color: var(--accent-color); cursor: pointer;">Sign Up</span></p>
+        </div>
+    </div>
+
+    <div class="overlay-container" id="page-overlay">
+        <div class="overlay-header">
+            <h2 class="overlay-title" id="page-title">Page Title</h2>
+            <button class="close-btn hoverable" onclick="closePage()"><i class="ph ph-x"></i></button>
+        </div>
+        <div class="container page-content" id="page-body"></div>
+    </div>
+
+    <div class="toast" id="toast">Item Added</div>
+
+    <script>
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        const productsDB = [
+            { id: 1, name: "Sonic Pro ANC", price: 299, category: "Audio", img: "Sonic" },
+            { id: 2, name: "Nexus Play V5", price: 599, category: "Gaming", img: "Console" },
+            { id: 3, name: "Aero Mesh Chair", price: 450, category: "Living", img: "Chair" },
+            { id: 4, name: "Void Runners", price: 890, category: "Footwear", img: "Shoes" },
+            { id: 5, name: "Ceramic Chrono", price: 3450, category: "Timepieces", img: "Watch" },
+            { id: 6, name: "Structure Tote", price: 2100, category: "Carry", img: "Bag" },
+            { id: 7, name: "Solar Shield", price: 450, category: "Eyewear", img: "Glasses" },
+            { id: 8, name: "Lumina Lamp", price: 120, category: "Living", img: "Lamp" },
+            { id: 9, name: "Echo Buds", price: 150, category: "Audio", img: "Buds" }
+        ];
+
+        let cart = [];
+        let isLoggedIn = false;
+
+        function toggleCart() {
+            const overlay = document.getElementById('cart-overlay');
+            overlay.classList.toggle('active') ? lenis.stop() : lenis.start();
+            renderCart();
+        }
+        function toggleSearch() {
+            const overlay = document.getElementById('search-overlay');
+            overlay.classList.toggle('active') ? lenis.stop() : lenis.start();
+        }
+        function toggleMenu() {
+            const overlay = document.getElementById('menu-overlay');
+            overlay.classList.toggle('active') ? lenis.stop() : lenis.start();
+        }
+        function toggleAuth() {
+            if (isLoggedIn) openPage('profile');
+            else document.getElementById('auth-modal').classList.toggle('active');
+        }
+        function loginUser() {
+            isLoggedIn = true;
+            document.getElementById('auth-modal').classList.remove('active');
+            showToast('Welcome back, User');
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartCount();
+            showToast(`Added ${name}`);
+        }
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            renderCart();
+        }
+        function updateCartCount() {
+            const countEl = document.getElementById('cart-count');
+            if (countEl) {
+                countEl.innerText = cart.length;
+                countEl.style.display = cart.length > 0 ? 'flex' : 'none';
+            }
+        }
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total-price');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 2rem;">Your cart is empty.</p>';
+                totalEl.innerText = '$0';
+                return;
+            }
+            let html = ''; let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-img"></div>
+                        <div class="cart-item-info"><h4>${item.name}</h4><p>$${item.price}</p></div>
+                        <button class="hoverable" style="margin-left: auto; background: none; border: none; color: var(--danger-color);" onclick="removeFromCart(${index})"><i class="ph ph-trash"></i></button>
+                    </div>`;
+            });
+            container.innerHTML = html;
+            totalEl.innerText = `$${total}`;
+        }
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 3000);
+        }
+
+        function renderShopPage(filter = 'All') {
+            const filtered = filter === 'All' ? productsDB : productsDB.filter(p => p.category === filter);
+            const categories = ['All', 'Living', 'Audio', 'Footwear', 'Timepieces', 'Carry', 'Eyewear', 'Gaming'];
+
+            let html = `
+                <div class="shop-controls">
+                    ${categories.map(cat => `
+                        <button class="shop-filter-btn hoverable ${cat === filter ? 'active' : ''}" onclick="renderShopPage('${cat}')">${cat}</button>
+                    `).join('')}
+                </div>
+                <div class="shop-grid">
+            `;
+
+            if (filtered.length === 0) {
+                html += `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No items found in this category.</p>`;
+            } else {
+                filtered.forEach(p => {
+                    html += `
+                        <div class="flash-card hoverable" onclick="addToCart('${p.name}', ${p.price})">
+                            <div class="img-placeholder flash-img-area">${p.img}</div>
+                            <div class="flash-meta">
+                                <div><h3 class="flash-title">${p.name}</h3><span class="flash-price">$${p.price}</span></div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div>`;
+
+            const body = document.getElementById('page-body');
+            body.innerHTML = html;
+            document.getElementById('page-title').innerText = filter === 'All' ? 'Shop Collection' : filter;
+        }
+
+        const pageContentMap = {
+            'contact': `
+                <h3>Get in Touch</h3>
+                <p>We are available 24/7 to assist you with your inquiries.</p>
+                <div class="form-group"><label>Name</label><input type="text" class="form-input" placeholder="Your Name"></div>
+                <div class="form-group"><label>Email</label><input type="email" class="form-input" placeholder="Your Email"></div>
+                <div class="form-group"><label>Message</label><textarea class="form-input" rows="5" placeholder="How can we help?"></textarea></div>
+                <button class="form-btn hoverable" onclick="showToast('Message Sent')">Send Message</button>
+                <div style="margin-top: 3rem; color: var(--text-muted);">
+                    <p><strong>HQ:</strong> 100 Luxury Blvd, Milan, Italy</p>
+                    <p><strong>Email:</strong> concierge@nexus.com</p>
+                </div>
+            `,
+            'profile': `
+                <h3>My Profile</h3>
+                <p>Member since 2026</p>
+                <div style="margin-top: 2rem; padding: 1.5rem; border: 1px solid var(--border-color); background: var(--card-bg);">
+                    <h4 style="margin-bottom: 0.5rem;">Recent Order #8821</h4>
+                    <p style="color: var(--accent-color); margin-bottom: 1rem;">Status: Shipped via Express</p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Sonic Pro ANC, Nexus Watch</p>
+                </div>
+                <button class="form-btn hoverable" style="margin-top: 2rem; background: var(--border-color); color: #fff;" onclick="isLoggedIn=false; closePage(); showToast('Logged Out')">Log Out</button>
+            `,
+            'story': `
+                <h3>The Origin</h3>
+                <p>Founded in the digital age, NEXUS was born from a desire to strip away the noise of modern commerce. We believe in objects that last, design that speaks, and logistics that feel like magic.</p>
+                <p>Our curation process is rigorous. Only 1% of products we review make it to our catalog. We prioritize craftsmanship, sustainable materials, and timeless aesthetics over fleeting trends.</p>
+                <h3>Our Philosophy</h3>
+                <p>True luxury is seamlessness. It is the absence of friction. From the moment you land on our platform to the unboxing experience, every interaction is engineered for elegance.</p>
+            `,
+            'journal': `
+                <h3>Latest Editorials</h3>
+                <div style="display: grid; gap: 2rem; margin-top: 2rem;">
+                    <div style="padding: 2rem; border: 1px solid var(--border-color);">
+                        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">The Future of Minimalism</h4>
+                        <p>How AI and generative design are reshaping the aesthetics of everyday objects.</p>
+                        <a class="hoverable" style="color: var(--accent-color); text-transform: uppercase; font-size: 0.8rem;">Read Article</a>
+                    </div>
+                    <div style="padding: 2rem; border: 1px solid var(--border-color);">
+                        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">Sustainable Luxury</h4>
+                        <p>Why the world's leading brands are turning to recycled composites.</p>
+                        <a class="hoverable" style="color: var(--accent-color); text-transform: uppercase; font-size: 0.8rem;">Read Article</a>
+                    </div>
+                </div>
+            `,
+            'sustainability': `<h3>Commitment to Earth</h3><p>We are carbon neutral. For every shipment, we plant a tree. Our packaging is 100% biodegradable.</p>`,
+            'careers': `<h3>Join Us</h3><p>We are always looking for visionaries. Current openings in Design, Engineering, and Logistics.</p>`,
+            'press': `<h3>In The News</h3><p>NEXUS featured in Vogue, Wired, and Monocle.</p>`,
+            'service': `<h3>Client Services</h3><p>Need styling advice? Our concierge team is ready to help you curate your lifestyle.</p>`,
+            'shipping': `<h3>Global Velocity</h3><p>We ship to over 100 countries. Standard shipping is 3-5 business days. Express is 1-2 days.</p>`,
+            'payment': `<h3>Secure Transactions</h3><p>All payments are encrypted with military-grade security. We accept all major cards and crypto.</p>`,
+            'legal': `<h3>Terms & Privacy</h3><p>By using NEXUS, you agree to our terms of service. We respect your privacy and data.</p>`,
+            'archive': `<h3>The Archive</h3><p>Past collections and limited drops that defined our journey. Currently view-only.</p>`
+        };
+
+        function openPage(pageId) {
+            const overlay = document.getElementById('page-overlay');
+            const title = document.getElementById('page-title');
+            const body = document.getElementById('page-body');
+
+            if (pageId === 'shop') {
+                renderShopPage();
+            } else {
+                title.innerText = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+                body.innerHTML = pageContentMap[pageId] || `<p>Content loading...</p>`;
+            }
+
+            overlay.classList.add('active');
+            lenis.stop();
+            document.getElementById('menu-overlay').classList.remove('active');
+        }
+
+        function openShopCategory(cat) {
+            openPage('shop');
+            renderShopPage(cat);
+        }
+
+        function closePage() {
+            document.getElementById('page-overlay').classList.remove('active');
+            lenis.start();
+        }
+
+        const cursor = document.getElementById("cursor");
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener("mousemove", (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            document.addEventListener("mouseover", (e) => {
+                if (e.target.closest('.hoverable')) cursor.classList.add("hovered");
+                else cursor.classList.remove("hovered");
+            });
+        } else { cursor.style.display = 'none'; }
+
+        const logo = document.getElementById('dynamic-logo');
+        const logoDest = document.getElementById('logo-dest');
+        const navbar = document.getElementById('navbar');
+
+        ScrollTrigger.create({
+            trigger: "body", start: "top top", end: "500px top", scrub: 1,
+            onUpdate: (self) => {
+                const p = self.progress;
+                const destRect = logoDest.getBoundingClientRect();
+                const startX = window.innerWidth / 2;
+                const startY = window.innerHeight / 2;
+                const destX = destRect.left + destRect.width / 2;
+                const destY = destRect.top + destRect.height / 2;
+                const x = gsap.utils.interpolate(startX, destX, p);
+                const y = gsap.utils.interpolate(startY, destY, p);
+                const scale = gsap.utils.interpolate(1, 0.15, p);
+
+                gsap.set(logo, { left: x, top: y, scale: scale });
+                if (p > 0.9) {
+                    navbar.classList.add('scrolled-nav');
+                    document.documentElement.style.setProperty('--logo-color', 'var(--nav-text-scrolled)');
+                } else {
+                    navbar.classList.remove('scrolled-nav');
+                    document.documentElement.style.setProperty('--logo-color', '#ffffff');
+                }
+            }
+        });
+
+        gsap.to(".scroll-indicator", { opacity: 0.5, y: -10, repeat: -1, yoyo: true, duration: 1.5 });
+        gsap.to(".scroll-indicator", { scrollTrigger: { trigger: ".hero", start: "top top", end: "20% top", scrub: true }, opacity: 0 });
+        gsap.to(".marquee-track", { xPercent: -50, ease: "none", duration: 20, repeat: -1 });
+
+        gsap.utils.toArray(".reveal-on-scroll").forEach(section => {
+            gsap.from(section.children, { y: 50, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out", scrollTrigger: { trigger: section, start: "top 85%", toggleActions: "play reverse play reverse" } });
+        });
+        gsap.from(".flash-card", { y: 50, opacity: 0, duration: 0.8, stagger: 0.1, ease: "back.out(1.7)", scrollTrigger: { trigger: ".flash-section", start: "top 75%", toggleActions: "play reverse play reverse" } });
+        gsap.from(".category-item", { scale: 0.8, y: 30, opacity: 0, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)", scrollTrigger: { trigger: ".category-grid", start: "top 85%", toggleActions: "play reverse play reverse" } });
+
+        const panels = document.querySelectorAll('.sticky-panel');
+        panels.forEach((panel, i) => {
+            const text = panel.querySelector('.panel-text');
+            const visual = panel.querySelector('.panel-visual');
+            const tl = gsap.timeline({ scrollTrigger: { trigger: panel, start: "top 60%", end: "top 20%", scrub: 1 } });
+            tl.to(text, { opacity: 1, y: 0, duration: 1 }).to(visual, { opacity: 1, scale: 1, duration: 1 }, "<");
+            ScrollTrigger.create({ trigger: panel, start: "top center", onEnter: () => { if (i === 0) gsap.to("#bg-1", { opacity: 0 }); }, onLeaveBack: () => { if (i === 0) gsap.to("#bg-1", { opacity: 1 }); } });
+        });
+
+        gsap.to(".cta-glow-bg", { scale: 1.2, opacity: 0.25, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+        const footerContentTl = gsap.timeline({ scrollTrigger: { trigger: "footer", start: "top 85%", toggleActions: "play none none none" } });
+        footerContentTl.from(".footer-brand", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" })
+            .from(".footer-col", { y: 20, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" }, "-=0.6")
+            .from(".footer-bottom", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.6");
+        gsap.from(".footer-huge-text", { y: 100, opacity: 0, scale: 0.9, duration: 1, ease: "power4.out", scrollTrigger: { trigger: "footer", start: "top 85%", end: "bottom bottom", toggleActions: "play reverse play reverse" } });
+
+        const themeBtn = document.getElementById('themeBtn');
+        const themeIcon = themeBtn.querySelector('i');
+        const html = document.documentElement;
+        themeBtn.addEventListener('click', () => {
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                themeIcon.classList.remove('ph-sun'); themeIcon.classList.add('ph-moon');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.classList.remove('ph-moon'); themeIcon.classList.add('ph-sun');
+            }
+        });
+    </script>
+</body>
+
+</html>
