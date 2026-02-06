@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": "admin-1",
+      "email": "admin@nexus.com",
+      "password": "admin",
+      "name": "Nexus Admin"
+    }
+  ],
+  "orders": [
+    {
+      "id": "NX-2545",
+      "items": [
+        {
+          "name": "Mock Data",
+          "price": 0,
+          "img": "Mock Data",
+          "id": "a7zkdmmwz"
+        }
+      ],
+      "shipping": {
+        "firstName": "Mir Hassna",
+        "lastName": "Aslam",
+        "address": "Sheller ",
+        "city": "Lahore",
+        "postalCode": "54920"
+      },
+      "total": 0,
+      "status": "pending",
+      "createdAt": "2026-02-06T08:22:35.132Z",
+      "userId": "guest"
+    }
+  ],
+  "products": []
+}

@@ -25,20 +25,12 @@ export default function FlashSection() {
         });
     }
 
-    const items = [
-        { name: 'Sonic Pro', price: 299, badge: '-30% OFF', img: 'Sonic Pro' },
-        { name: 'Nexus Watch', price: 199, badge: '-40% OFF', img: 'Nexus Watch', realName: 'Series 5 Watch' },
-        { name: 'Alpha Lens', price: 1200, badge: 'LIMITED', img: 'Alpha Cam' },
-        { name: 'Hammershoi', price: 85, badge: 'RARE', img: 'Ceramic Vase' },
-        { name: 'Lunar Pods', price: 150, badge: 'NEW', img: 'Lunar Pods' },
-        { name: 'Stealth Cam', price: 899, badge: 'HOT', img: 'Stealth Cam' },
-        { name: 'Vortex Drone', price: 450, badge: '-15% OFF', img: 'Vortex Drone' },
-        { name: 'Echo Smart', price: 99, badge: 'DEAL', img: 'Echo Smart' },
-        { name: 'Fusion Tab', price: 600, badge: '-20% OFF', img: 'Fusion Tab' },
-        { name: 'Nova Speaker', price: 220, badge: 'POPULAR', img: 'Nova Speaker' },
-        { name: 'Zenith Hub', price: 120, badge: 'SALE', img: 'Zenith Hub' },
-        { name: 'Quantum Key', price: 180, badge: 'LIMITED', img: 'Quantum Key' },
-    ];
+    const items = Array(10).fill({
+        name: 'Mock Data',
+        price: 0,
+        badge: 'MOCK',
+        img: 'Mock Data'
+    });
 
     // Double items for seamless loop
     const loopedItems = [...items, ...items];

@@ -21,19 +21,25 @@ export default function Navbar() {
         >
             <div className="container nav-content">
                 {/* Left */}
-                <div className="nav-left">
+                <div className="nav-left flex gap-6 items-center">
                     <Link
-                        href="/contact"
-                        className="contact-link hoverable cursor-none"
+                        href="/shop"
+                        className="font-display text-xs uppercase tracking-[0.2em] hover:text-accent transition-colors duration-300"
                     >
-                        <Plus size={14} /> <span className="hidden md:inline">Contact Us</span>
+                        Shop
+                    </Link>
+                    <Link
+                        href="/story"
+                        className="font-display text-xs uppercase tracking-[0.2em] hover:text-accent transition-colors duration-300"
+                    >
+                        Story
                     </Link>
                 </div>
 
                 {/* Center */}
                 <div className="nav-center">
                     {!isHome ? (
-                        <Link href="/" className="font-display text-2xl font-bold tracking-widest hover:text-accent transition-colors uppercase">
+                        <Link href="/" className="font-display text-3xl font-bold tracking-widest hover:text-accent transition-colors uppercase">
                             NEXUS
                         </Link>
                     ) : (
@@ -44,49 +50,40 @@ export default function Navbar() {
 
                 {/* Right */}
                 <div className="nav-right">
-                    <div className="nav-icons">
+                    <div className="nav-icons flex gap-4">
+                        <MagneticButton onClick={toggleSearch}>
+                            <button className="nav-icon-btn hover:text-accent transition-colors">
+                                <MagnifyingGlass size={18} />
+                            </button>
+                        </MagneticButton>
+                        <MagneticButton onClick={toggleAuth}>
+                            <button className="nav-icon-btn hover:text-accent transition-colors hidden sm:flex">
+                                <User size={18} />
+                            </button>
+                        </MagneticButton>
                         <MagneticButton onClick={toggleCart}>
-                            <button
-                                className="nav-icon-btn hoverable cursor-none relative"
-                            >
-                                <Handbag size={20} />
+                            <button className="nav-icon-btn hover:text-accent transition-colors relative">
+                                <Handbag size={18} />
                                 {cartCount > 0 && (
-                                    <span id="cart-count" className="cart-badge flex items-center justify-center">
+                                    <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-accent text-[8px] text-white">
                                         {cartCount}
                                     </span>
                                 )}
                             </button>
                         </MagneticButton>
-                        <MagneticButton onClick={toggleAuth}>
-                            <button
-                                className="nav-icon-btn hoverable cursor-none hidden sm:flex"
-                            >
-                                <User size={20} />
-                            </button>
-                        </MagneticButton>
-                        <MagneticButton onClick={toggleSearch}>
-                            <button
-                                className="nav-icon-btn hoverable cursor-none hidden sm:flex"
-                            >
-                                <MagnifyingGlass size={20} />
+                        <MagneticButton onClick={toggleMenu}>
+                            <button className="nav-icon-btn hover:text-accent transition-colors">
+                                <List size={18} />
                             </button>
                         </MagneticButton>
                         <button
                             id="themeBtn"
-                            className="nav-icon-btn hoverable cursor-none"
+                            className="nav-icon-btn hover:text-accent transition-colors"
                             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                         >
-                            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+                            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
                     </div>
-                    <MagneticButton onClick={toggleMenu}>
-                        <div
-                            className="menu-btn hoverable cursor-none"
-                        >
-                            <List size={20} />
-                            <span className="hidden sm:inline">MENU</span>
-                        </div>
-                    </MagneticButton>
                 </div>
             </div>
         </nav>

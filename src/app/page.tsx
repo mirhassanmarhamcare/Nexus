@@ -18,8 +18,8 @@ export default function Home() {
       <Hero />
       <FeaturesSection />
       <Marquee />
-      <FlashSection />
       <CategoriesSection />
+      <FlashSection />
       {/* <BestDealsSection /> removed by user request */}
       <TopSellersSection />
       <CTASection />

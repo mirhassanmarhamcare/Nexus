@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
-import { Armchair, Headphones, Sneaker, Watch, Bag, Sunglasses } from "@phosphor-icons/react";
+import { Armchair, Headphones, Sneaker, Watch, Bag, Sunglasses, House, Users, Diamond, Wallet, Heart, Moon, Circle } from "@phosphor-icons/react";
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,12 +47,10 @@ export default function CategoriesSection() {
     }, { scope: containerRef });
 
     const categories = [
-        { name: 'Living', icon: Armchair },
-        { name: 'Audio', icon: Headphones },
-        { name: 'Footwear', icon: Sneaker },
-        { name: 'Timepieces', icon: Watch },
-        { name: 'Carry', icon: Bag },
-        { name: 'Eyewear', icon: Sunglasses },
+        { name: 'Handbags', icon: Bag },
+        { name: 'Shoes', icon: Sneaker },
+        { name: "Men's Leather Wallet", icon: Wallet },
+        { name: 'Jewelry', icon: Diamond },
     ];
 
     return (
@@ -62,7 +60,7 @@ export default function CategoriesSection() {
                 <p className="section-subtitle">Curated categories for the modern connoisseur.</p>
             </div>
 
-            <div className="category-grid">
+            <div className="category-grid mb-12">
                 {categories.map((cat, i) => (
                     <div
                         key={i}
@@ -78,6 +76,17 @@ export default function CategoriesSection() {
                         </span>
                     </div>
                 ))}
+            </div>
+
+            <div className="flex justify-center">
+                <div // Wrapper for magnetic effect if MagneticButton isn't importing correctly or used directly
+                    onClick={() => router.push('/shop')}
+                    className="cursor-pointer"
+                >
+                    <button className="px-8 py-3 border border-white/20 hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-500 rounded-sm text-sm uppercase tracking-[0.2em] backdrop-blur-sm">
+                        Explore More Categories
+                    </button>
+                </div>
             </div>
         </section>
     );

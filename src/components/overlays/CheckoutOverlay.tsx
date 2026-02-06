@@ -2,6 +2,8 @@
 
 import { useUIStore } from "@/store/ui.store";
 import { useCartStore } from "@/store/cart.store";
+import { useAuthStore } from "@/store/auth.store";
+import { useToastStore } from "@/store/toast.store";
 import { X, CheckCircle, CreditCard, SpinnerGap } from "@phosphor-icons/react";
 import { useLenis } from "@studio-freight/react-lenis";
 import { useEffect, useRef, useState } from "react";
@@ -10,11 +12,23 @@ import { useGSAP } from "@gsap/react";
 
 export default function CheckoutOverlay() {
     const { isCheckoutOpen, toggleCheckout } = useUIStore();
-    const { total, clearCart } = useCartStore();
+    const { total, clearCart, items } = useCartStore();
+    const { user } = useAuthStore(); // We can pass user email/id
+    const { showToast } = useToastStore();
     const lenis = useLenis();
     const containerRef = useRef<HTMLDivElement>(null);
     const [step, setStep] = useState(1);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [orderId, setOrderId] = useState<string>("");
+
+    // Form State
+    const [shipping, setShipping] = useState({
+        firstName: "",
+        lastName: "",
+        address: "",
+        city: "",
+        postalCode: ""
+    });
 
     // Lock scroll when overlay is open
     useEffect(() => {
@@ -32,22 +46,57 @@ export default function CheckoutOverlay() {
         if (isCheckoutOpen) {
             setStep(1); // Reset step on open
             setIsProcessing(false);
-
-            // Animate step transition if needed, or just container entrance
+            setOrderId("");
         }
     }, { scope: containerRef, dependencies: [isCheckoutOpen] });
 
-    const nextStep = () => {
-        if (step === 2) {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setShipping({ ...shipping, [e.target.name]: e.target.value });
+    };
+
+    const nextStep = async () => {
+        if (step === 1) {
+            if (!shipping.firstName || !shipping.address || !shipping.city) {
+                showToast("Please complete shipping details");
+                return;
+            }
+            setStep(2);
+        } else if (step === 2) {
             // Process Payment
             setIsProcessing(true);
-            setTimeout(() => {
+
+            try {
+                // Simulate Payment Gateway delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Create Order on Backend
+                const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items,
+                        shipping,
+                        total: total(),
+                        userId: user || 'guest'
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.error || "Payment failed");
+                    setIsProcessing(false);
+                } else {
+                    setOrderId(data.orderId);
+                    clearCart();
+                    setStep(3);
+                    setIsProcessing(false);
+                }
+
+            } catch (error) {
+                showToast("Payment processing error");
                 setIsProcessing(false);
-                setStep(3);
-                clearCart();
-            }, 2000);
-        } else {
-            setStep(step + 1);
+            }
         }
     };
 
@@ -88,13 +137,13 @@ export default function CheckoutOverlay() {
                         <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-500">
                             <h3 className="text-xl mb-4">Shipping Details</h3>
                             <div className="grid grid-cols-2 gap-4">
-                                <input type="text" placeholder="First Name" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
-                                <input type="text" placeholder="Last Name" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
+                                <input name="firstName" onChange={handleInputChange} value={shipping.firstName} type="text" placeholder="First Name" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
+                                <input name="lastName" onChange={handleInputChange} value={shipping.lastName} type="text" placeholder="Last Name" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
                             </div>
-                            <input type="text" placeholder="Address" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
+                            <input name="address" onChange={handleInputChange} value={shipping.address} type="text" placeholder="Address" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
                             <div className="grid grid-cols-2 gap-4">
-                                <input type="text" placeholder="City" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
-                                <input type="text" placeholder="Postal Code" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
+                                <input name="city" onChange={handleInputChange} value={shipping.city} type="text" placeholder="City" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
+                                <input name="postalCode" onChange={handleInputChange} value={shipping.postalCode} type="text" placeholder="Postal Code" className="p-4 bg-background border border-white/10 outline-none focus:border-accent transition-colors" />
                             </div>
                         </div>
                     )}
@@ -126,7 +175,7 @@ export default function CheckoutOverlay() {
                             <CheckCircle size={80} className="text-accent" weight="fill" />
                             <h3 className="text-3xl font-display">Order Confirmed</h3>
                             <p className="text-muted-foreground">Thank you for your purchase. A confirmation email has been sent to you.</p>
-                            <p className="font-mono text-sm border border-white/10 p-2 px-4 rounded-full">Order #NX-{Math.floor(Math.random() * 10000)}</p>
+                            <p className="font-mono text-sm border border-white/10 p-2 px-4 rounded-full">Order #{orderId}</p>
                         </div>
                     )}
                 </div>

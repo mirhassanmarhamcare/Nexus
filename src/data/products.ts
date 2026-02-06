@@ -1,12 +1,59 @@
-export const productsDB = [
-    { id: 1, name: "Sonic Pro ANC", price: 299, category: "Audio", img: "/hero.jpg" },
-    { id: 2, name: "Nexus Play V5", price: 599, category: "Gaming", img: "/hero.jpg" },
-    { id: 3, name: "Aero Mesh Chair", price: 450, category: "Living", img: "/hero.jpg" },
-    { id: 4, name: "Void Runners", price: 890, category: "Footwear", img: "/hero.jpg" },
-    { id: 5, name: "Ceramic Chrono", price: 3450, category: "Timepieces", img: "/hero.jpg" },
-    { id: 6, name: "Structure Tote", price: 2100, category: "Carry", img: "/hero.jpg" },
-    { id: 7, name: "Solar Shield", price: 450, category: "Eyewear", img: "/hero.jpg" },
-    { id: 8, name: "Lumina Lamp", price: 120, category: "Living", img: "/hero.jpg" },
-    { id: 9, name: "Echo Buds", price: 150, category: "Audio", img: "/hero.jpg" }
+export interface Product {
+    id: string;
+    name: string;
+    price: number;
+    category: string;
+    img: string;
+}
 
+const CATEGORIES = [
+    'Watches',
+    'Home Decor',
+    'Home Cleaning',
+    'Men & Women Watches',
+    'Couple Watches',
+    'Jewelry',
+    'Wallet',
+    'Bras',
+    'Night Suit',
+    'Rings'
 ];
+
+// Helper to generate products
+const generateProducts = (): Product[] => {
+    let products: Product[] = [];
+    let idCounter = 1;
+
+    CATEGORIES.forEach(category => {
+        for (let i = 1; i <= 10; i++) {
+            products.push({
+                id: `prod-${idCounter}`,
+                name: `${category} Item ${i}`,
+                price: ((idCounter * 17) % 450) + 50, // Deterministic price based on ID
+                category: category,
+                img: '/hero.jpg' // Using placeholder image as we don't have real 100 images
+            });
+            idCounter++;
+        }
+    });
+
+    return products;
+};
+
+// Deterministic seeded random to avoid hydration errors
+let seed = 5678;
+const seededRandom = () => {
+    const x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+};
+
+// Helper to shuffle array
+const shuffleArray = (array: Product[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(seededRandom() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
+
+export const productsDB: Product[] = shuffleArray(generateProducts());

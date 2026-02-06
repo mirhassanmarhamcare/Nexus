@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation";
 
 // Define menu items with associated images
 const MENU_ITEMS = [
-    { label: "Shop Collection", action: "shop", image: "/hero.jpg", desc: "Explore our latest arrivals" },
-    { label: "Our Story", action: "story", image: "/hero.jpg", desc: "The legacy behind Nexus" }, // Using hero.jpg as placeholder
+    { label: "Shop", action: "shop", image: "/hero.jpg", desc: "Explore our latest arrivals" },
+    { label: "Story", action: "story", image: "/hero.jpg", desc: "The legacy behind Nexus" }, // Using hero.jpg as placeholder
     { label: "Journal", action: "journal", image: "/hero.jpg", desc: "News and editorials" },
     { label: "Contact", action: "contact", image: "/hero.jpg", desc: "Get in touch with us" },
     { label: "Account", action: "account", image: "/hero.jpg", desc: "Manage your profile" },
@@ -89,7 +89,7 @@ export default function MenuOverlay() {
         <div
             ref={containerRef}
             id="menu-overlay"
-            className={`fixed inset-0 z-[9999] flex ${isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+            className={`fixed inset-0 z-[9999] flex ${isMenuOpen ? "pointer-events-auto visible" : "pointer-events-none invisible transition-[visibility] delay-1000"
                 }`}
         >
             {/* Backdrop / Overlay logic */}

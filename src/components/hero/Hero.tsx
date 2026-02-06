@@ -69,8 +69,8 @@ export default function Hero() {
                 scrollTrigger: {
                     trigger: "body",
                     start: "top top",
-                    end: "120px top", // Very short distance for quick lock-in
-                    scrub: 0.1, // Almost 1:1 response, very little smoothing lag
+                    end: "300px top", // Extended scroll distance for smoother transition
+                    scrub: 1.5, // "Liquid" feel - higher value = more smoothing/lag
                 }
             });
 
@@ -88,7 +88,7 @@ export default function Hero() {
                     y: shiftY,
                     scale: finalScale,
                     color: "var(--nav-text-scrolled)", // Animate color to navbar theme
-                    ease: "power1.out", // Fast start (no ease-in lag)
+                    ease: "power2.inOut", // Silky smooth ease
                     duration: 1
                 },
                 0
@@ -193,38 +193,26 @@ export default function Hero() {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} id="hero-sec" className="hero h-screen relative z-[1]">
+        <>
             <h1 id="dynamic-logo">NEXUS</h1>
-            <div className="absolute inset-0 z-[-1]">
-                <img
-                    src="/hero.jpg"
-                    alt="Hero Background"
-                    className="w-full h-full object-cover opacity-60"
-                />
-            </div>
+            <section ref={containerRef} id="hero-sec" className="hero h-screen relative z-[1]">
+                <div className="absolute inset-0 z-[-1]">
+                    <img
+                        src="/hero.jpg"
+                        alt="Hero Background"
+                        className="w-full h-full object-cover opacity-60"
+                    />
+                </div>
 
-            {/* Hero Buttons - Positioned below the centralized fixed logo */}
-            {/* Logo is at 50% top. Buttons should be around 60-65% */}
-            <div className="hero-btn-group absolute top-[62%] left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-4 sm:gap-8 z-10 w-full sm:w-auto px-4 sm:px-0 items-center">
-                <Link href="/contact" className="w-full sm:w-auto">
-                    <MagneticButton>
-                        <button className="px-8 py-3 border border-white/20 hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-500 rounded-sm text-sm uppercase tracking-[0.2em] backdrop-blur-sm w-full">
-                            Contact Us
-                        </button>
-                    </MagneticButton>
-                </Link>
-                <Link href="/story" className="w-full sm:w-auto">
-                    <MagneticButton>
-                        <button className="px-8 py-3 border border-white/20 hover:border-white hover:bg-white/5 transition-all duration-500 rounded-sm text-sm uppercase tracking-[0.2em] backdrop-blur-sm w-full">
-                            About Us
-                        </button>
-                    </MagneticButton>
-                </Link>
-            </div>
-
-            <div className="scroll-indicator absolute bottom-12 left-1/2 -translate-x-1/2 text-[0.7rem] opacity-0 uppercase tracking-[3px] text-[#888]">
-                SCROLL TO BEGIN
-            </div>
-        </section >
+                <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10">
+                    <Link href="/shop" className="group">
+                        <span className="font-display text-white text-xs uppercase tracking-[0.3em] group-hover:tracking-[0.5em] transition-all duration-700">Explore Collection</span>
+                    </Link>
+                    <div className="w-[1px] h-12 bg-white/30 mt-4 overflow-hidden">
+                        <div className="w-full h-full bg-white animate-scroll-down"></div>
+                    </div>
+                </div>
+            </section >
+        </>
     );
 }
