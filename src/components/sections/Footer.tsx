@@ -94,7 +94,7 @@ export default function Footer() {
                 </div>
 
                 <div className="footer-bottom">
-                    <span>&copy; {year} NEXUS Commerce. All Rights Reserved.</span>
+                    <span className="pl-16 md:pl-0">&copy; {year} NEXUS Commerce. All Rights Reserved.</span>
                     <div className="flex gap-8">
                         <span className="hoverable cursor-none" onClick={() => showToast('Instagram Link')}>INSTAGRAM</span>
                         <span className="hoverable cursor-none" onClick={() => showToast('Twitter Link')}>TWITTER</span>
