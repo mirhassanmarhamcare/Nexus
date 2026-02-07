@@ -46,13 +46,21 @@ export default function CartOverlay() {
                 ) : (
                     items.map((item, index) => (
                         <div key={index} className="cart-item flex gap-4 items-center border-b border-white/15 pb-4">
-                            <div className="cart-item-img w-[80px] h-[80px] bg-[#222] rounded-[4px]"></div>
+                            <div className="cart-item-img w-[80px] h-[80px] relative bg-[#222] rounded-[4px] overflow-hidden shrink-0">
+                                {item.img && (
+                                    <img
+                                        src={item.img}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                )}
+                            </div>
                             <div className="cart-item-info">
-                                <h4 className="text-[1rem] mb-[0.2rem]">{item.name}</h4>
-                                <p className="text-accent">${item.price}</p>
+                                <h4 className="text-[1rem] mb-[0.2rem] font-display uppercase tracking-wider">{item.name}</h4>
+                                <p className="text-accent text-sm">Rs. {item.price.toLocaleString()}</p>
                             </div>
                             <button
-                                className="hoverable ml-auto bg-transparent border-none text-danger cursor-none"
+                                className="hoverable ml-auto bg-transparent border-none text-danger cursor-none opacity-50 hover:opacity-100 transition-opacity"
                                 onClick={() => removeFromCart(index)}
                             >
                                 <Trash size={20} />
@@ -65,7 +73,7 @@ export default function CartOverlay() {
             <div className="cart-footer mt-auto border-t border-white/15 pt-8">
                 <div className="cart-total flex justify-between text-[1.5rem] mb-8 font-display">
                     <span>Total</span>
-                    <span>${total()}</span>
+                    <span>Rs. {total().toLocaleString()}</span>
                 </div>
                 <button
                     className="checkout-btn hoverable w-full bg-foreground text-background p-4 font-semibold uppercase border-none cursor-none"

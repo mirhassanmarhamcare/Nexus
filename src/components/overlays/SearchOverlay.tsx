@@ -99,7 +99,7 @@ export default function SearchOverlay() {
                                         <div>
                                             <h4 className="font-display text-xl text-foreground group-hover:text-accent transition-colors">{item.name}</h4>
                                             <p className="text-sm text-muted-foreground uppercase tracking-wider">{item.category}</p>
-                                            <p className="text-accent mt-1">${item.price}</p>
+                                            <p className="text-accent mt-1">Rs. {item.price.toLocaleString()}</p>
                                         </div>
                                     </div>
                                 ))

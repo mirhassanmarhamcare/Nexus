@@ -56,13 +56,13 @@ export default function PageOverlayHost() {
                                     useUIStore.getState().openProduct(p);
                                 }}
                             >
-                                <div className="img-placeholder flash-img-area w-full h-[250px] bg-gradient-to-tr from-[#1a1a1a] to-[#222] flex items-center justify-center text-muted text-[0.7rem] uppercase tracking-[0.2em] relative overflow-hidden">
-                                    {p.img}
+                                <div className="img-placeholder flash-img-area w-full h-[250px] bg-gradient-to-tr from-[#1a1a1a] to-[#222] flex items-center justify-center text-muted text-foreground uppercase tracking-[0.2em] relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                                    <img src={p.images[0]} alt={p.name} className="absolute inset-0 w-full h-full object-cover" />
                                 </div>
                                 <div className="flash-meta flex justify-between items-start">
                                     <div>
                                         <h3 className="flash-title font-display text-[1.2rem] mb-2 text-foreground">{p.name}</h3>
-                                        <span className="flash-price text-accent">${p.price}</span>
+                                        <span className="flash-price text-accent">Rs. {p.price.toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>

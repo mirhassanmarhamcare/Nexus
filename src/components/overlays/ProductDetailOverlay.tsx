@@ -3,11 +3,12 @@
 import { useUIStore } from "@/store/ui.store";
 import { useCartStore } from "@/store/cart.store";
 import { useToastStore } from "@/store/toast.store";
-import { X, ArrowRight, Minus, Plus } from "@phosphor-icons/react";
+import { X, ArrowRight, Minus, Plus, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { useLenis } from "@studio-freight/react-lenis";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import Image from "next/image";
 
 export default function ProductDetailOverlay() {
     const { activeProduct, closeProduct } = useUIStore();
@@ -17,6 +18,14 @@ export default function ProductDetailOverlay() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [quantity, setQuantity] = useState(1);
     const [selectedSize, setSelectedSize] = useState("M");
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    // Reset image index when product opens
+    useEffect(() => {
+        if (activeProduct) {
+            setCurrentImageIndex(0);
+        }
+    }, [activeProduct]);
 
     // Lock scroll when overlay is open
     useEffect(() => {
@@ -60,10 +69,20 @@ export default function ProductDetailOverlay() {
         addToCart({
             name: activeProduct.realName || activeProduct.name,
             price: activeProduct.price,
-            img: activeProduct.img
-        }); // Note: Quantity logic would need cart store update, defaulting to 1 for now or adding multiple
+            img: activeProduct.images?.[0] || activeProduct.img // Fallback for safety
+        });
         showToast(`Added ${activeProduct.name} to Cart`);
         closeProduct();
+    };
+
+    const nextImage = () => {
+        if (!activeProduct?.images) return;
+        setCurrentImageIndex((prev) => (prev + 1) % activeProduct.images.length);
+    };
+
+    const prevImage = () => {
+        if (!activeProduct?.images) return;
+        setCurrentImageIndex((prev) => (prev - 1 + activeProduct.images.length) % activeProduct.images.length);
     };
 
     return (
@@ -79,16 +98,55 @@ export default function ProductDetailOverlay() {
                 <div className="w-full h-full flex flex-col md:flex-row">
 
                     {/* LEFT COLUMN: IMAGE */}
-                    <div className="w-full md:w-1/2 h-[50vh] md:h-full bg-accent/5 relative overflow-hidden product-image-reveal">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            {/* Placeholder visual based on product img string */}
-                            <span className="text-[10vw] md:text-[5vw] font-display text-foreground/10 uppercase tracking-widest text-center px-4">
-                                {activeProduct?.name || "NEXUS"}
-                            </span>
+                    <div className="w-full md:w-1/2 h-[50vh] md:h-full bg-white relative overflow-hidden product-image-reveal group">
+                        {activeProduct?.images && activeProduct.images.length > 0 ? (
+                            <>
+                                <Image
+                                    src={activeProduct.images[currentImageIndex]}
+                                    alt={activeProduct.name}
+                                    fill
+                                    className="object-contain p-12 md:p-24"
+                                    priority
+                                />
+                                {activeProduct.images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/20 backdrop-blur-md border border-white/10 flex items-center justify-center rounded-full text-foreground hover:bg-accent hover:text-white transition-colors z-20"
+                                        >
+                                            <CaretLeft size={20} />
+                                        </button>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/20 backdrop-blur-md border border-white/10 flex items-center justify-center rounded-full text-foreground hover:bg-accent hover:text-white transition-colors z-20"
+                                        >
+                                            <CaretRight size={20} />
+                                        </button>
+                                        <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 z-20">
+                                            {activeProduct.images.map((_: string, idx: number) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
+                                                    className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-accent w-4' : 'bg-white/50 hover:bg-white'}`}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        ) : (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                {/* Placeholder visual based on product img string */}
+                                <span className="text-[10vw] md:text-[5vw] font-display text-foreground/10 uppercase tracking-widest text-center px-4">
+                                    {activeProduct?.name || "NEXUS"}
+                                </span>
+                            </div>
+                        )}
 
-                        </div>
-                        <div className="absolute bottom-8 left-8">
-                            <span className="text-xs uppercase tracking-widest text-muted-foreground">Detailed View</span>
+                        <div className="absolute top-8 left-8 z-10">
+                            <span className="text-xs uppercase tracking-widest text-muted-foreground bg-background/50 backdrop-blur px-2 py-1 rounded">
+                                {activeProduct?.productCode}
+                            </span>
                         </div>
                     </div>
 
@@ -115,30 +173,30 @@ export default function ProductDetailOverlay() {
                                     {activeProduct?.realName || activeProduct?.name}
                                 </h2>
                                 <h3 className="text-xl md:text-2xl text-muted-foreground product-anim-item">
-                                    ${activeProduct?.price}
+                                    Rs. {activeProduct?.price?.toLocaleString()}
                                 </h3>
                             </div>
 
-                            <p className="text-muted-foreground leading-relaxed max-w-md product-anim-item">
-                                Meticulously engineered for the modern vanguard. This limited edition piece combines proprietary materials with artisanal craftsmanship.
-                            </p>
+                            <div className="product-anim-item text-muted-foreground leading-relaxed max-w-md">
+                                <p className="mb-4">
+                                    {activeProduct?.description || "Meticulously engineered for the modern vanguard. This limited edition piece combines proprietary materials with artisanal craftsmanship."}
+                                </p>
+
+                                {activeProduct?.details && (
+                                    <div className="grid grid-cols-1 gap-y-2 text-sm mt-6 border-t border-white/10 pt-4">
+                                        {Object.entries(activeProduct.details).map(([key, value]) => (
+                                            <div key={key} className="flex gap-2">
+                                                <span className="uppercase text-muted-foreground w-24 shrink-0 text-xs tracking-wider">{key}:</span>
+                                                <span className="text-foreground">{value as string}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
 
                             {/* Options */}
                             <div className="space-y-6 product-anim-item">
-                                <div>
-                                    <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">Size</label>
-                                    <div className="flex gap-2">
-                                        {['S', 'M', 'L', 'XL'].map(size => (
-                                            <button
-                                                key={size}
-                                                onClick={() => setSelectedSize(size)}
-                                                className={`w-10 h-10 border flex items-center justify-center text-sm transition-colors hover:border-accent cursor-none ${selectedSize === size ? 'border-accent bg-accent text-background' : 'border-white/20'}`}
-                                            >
-                                                {size}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+
                             </div>
 
                             {/* Actions */}

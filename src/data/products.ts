@@ -1,9 +1,23 @@
+import productsData from './products.json';
+
+export interface ProductVariant {
+    id: string;
+    name: string;
+    price?: number;
+    stock?: number;
+}
+
 export interface Product {
     id: string;
     name: string;
     price: number;
     category: string;
-    img: string;
+    images: string[];
+    description?: string;
+    details?: Record<string, string | undefined>;
+    productCode?: string;
+    variants?: ProductVariant[];
+    status?: 'draft' | 'published' | 'archived';
 }
 
 const CATEGORIES = [
@@ -19,7 +33,7 @@ const CATEGORIES = [
     'Rings'
 ];
 
-// Helper to generate products
+// Helper to generate products for other categories
 const generateProducts = (): Product[] => {
     let products: Product[] = [];
     let idCounter = 1;
@@ -31,7 +45,9 @@ const generateProducts = (): Product[] => {
                 name: `${category} Item ${i}`,
                 price: ((idCounter * 17) % 450) + 50, // Deterministic price based on ID
                 category: category,
-                img: '/hero.jpg' // Using placeholder image as we don't have real 100 images
+                images: ['/hero.jpg'], // Using placeholder image
+                status: 'published',
+                variants: []
             });
             idCounter++;
         }
@@ -56,4 +72,11 @@ const shuffleArray = (array: Product[]) => {
     return array;
 };
 
-export const productsDB: Product[] = shuffleArray(generateProducts());
+// Cast and map the JSON import to include defaults for new fields
+const realProducts: Product[] = (productsData as any[]).map(p => ({
+    ...p,
+    status: p.status || 'published',
+    variants: p.variants || []
+}));
+
+export const productsDB: Product[] = [...realProducts, ...shuffleArray(generateProducts())];

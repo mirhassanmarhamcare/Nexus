@@ -13,7 +13,7 @@ import { useGSAP } from "@gsap/react";
 export default function CheckoutOverlay() {
     const { isCheckoutOpen, toggleCheckout } = useUIStore();
     const { total, clearCart, items } = useCartStore();
-    const { user } = useAuthStore(); // We can pass user email/id
+    const { userEmail } = useAuthStore(); // We can pass user email/id
     const { showToast } = useToastStore();
     const lenis = useLenis();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -77,7 +77,7 @@ export default function CheckoutOverlay() {
                         items,
                         shipping,
                         total: total(),
-                        userId: user || 'guest'
+                        userId: userEmail || 'guest'
                     })
                 });
 
@@ -165,7 +165,7 @@ export default function CheckoutOverlay() {
                             </div>
                             <div className="mt-4 flex justify-between text-xl font-display">
                                 <span>Total to Pay:</span>
-                                <span>${total()}</span>
+                                <span>Rs. {total().toLocaleString()}</span>
                             </div>
                         </div>
                     )}
@@ -188,7 +188,7 @@ export default function CheckoutOverlay() {
                             disabled={isProcessing}
                             className="bg-foreground text-background px-8 py-4 uppercase tracking-widest font-semibold hover:bg-accent hover:text-foreground transition-all disabled:opacity-50 min-w-[200px] flex justify-center"
                         >
-                            {isProcessing ? <SpinnerGap size={24} className="animate-spin" /> : (step === 2 ? `Pay $${total()}` : "Continue")}
+                            {isProcessing ? <SpinnerGap size={24} className="animate-spin" /> : (step === 2 ? `Pay Rs. ${total().toLocaleString()}` : "Continue")}
                         </button>
                     ) : (
                         <button

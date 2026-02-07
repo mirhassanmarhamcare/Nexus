@@ -9,6 +9,7 @@ import MagneticButton from "@/components/ui/MagneticButton";
 
 const CATEGORIES = [
     'All',
+    'Women Handbags',
     'Watches',
     'Home Decor',
     'Home Cleaning',
@@ -66,28 +67,31 @@ export default function ShopPage() {
             </div>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12 mb-16">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8 mb-16">
                 {displayProducts.map((product) => (
                     <div key={product.id} className="group cursor-pointer" onClick={() => openProduct(product)}>
-                        <div className="aspect-[3/4] overflow-hidden mb-4 relative bg-card">
+                        <div className="aspect-square overflow-hidden mb-2 relative bg-white rounded-lg">
                             <Image
-                                src={product.img.startsWith('/') ? product.img : `/${product.img}`}
+                                src={product.images[0].startsWith('/') ? product.images[0] : `/${product.images[0]}`}
                                 alt={product.name}
                                 fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                className={`object-cover object-center transition-all duration-700 ease-in-out ${product.images.length > 1 ? "group-hover:opacity-0" : "group-hover:scale-110"}`}
                             />
+                            {product.images.length > 1 && (
+                                <Image
+                                    src={product.images[1].startsWith('/') ? product.images[1] : `/${product.images[1]}`}
+                                    alt={product.name}
+                                    fill
+                                    className="object-cover object-center absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-in-out scale-105"
+                                />
+                            )}
 
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <span className="px-6 py-2 bg-white/10 backdrop-blur-md border border-white/20 uppercase text-xs tracking-widest text-white">View</span>
-                            </div>
+                            {/* Overlay - Keeping it minimal */}
+                            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                         </div>
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <h3 className="font-display text-lg uppercase tracking-wide group-hover:text-accent transition-colors">{product.name}</h3>
-                                <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{product.category}</p>
-                            </div>
-                            <span className="font-mono text-sm opacity-60">${product.price}</span>
+                        <div className="flex flex-col items-start gap-1">
+                            <span className="font-semibold text-base">Rs. {product.price.toLocaleString()}</span>
+                            <h3 className="font-sans text-sm text-white/70 line-clamp-1 overflow-hidden text-ellipsis w-full" title={product.name}>{product.name}</h3>
                         </div>
                     </div>
                 ))}
