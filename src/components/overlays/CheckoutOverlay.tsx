@@ -76,7 +76,8 @@ export default function CheckoutOverlay() {
                     body: JSON.stringify({
                         items,
                         shipping,
-                        total: total(),
+                        total: useCartStore.getState().total(),
+                        promoUsed: useCartStore.getState().appliedPromo?.code,
                         userId: userEmail || 'guest'
                     })
                 });
@@ -165,7 +166,12 @@ export default function CheckoutOverlay() {
                             </div>
                             <div className="mt-4 flex justify-between text-xl font-display">
                                 <span>Total to Pay:</span>
-                                <span>Rs. {total().toLocaleString()}</span>
+                                <div>
+                                    {useCartStore.getState().discount() > 0 && (
+                                        <span className="text-sm line-through text-gray-500 mr-2">Rs. {useCartStore.getState().subtotal().toLocaleString()}</span>
+                                    )}
+                                    <span className="text-[#D4AF37]">Rs. {useCartStore.getState().total().toLocaleString()}</span>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -186,9 +192,9 @@ export default function CheckoutOverlay() {
                         <button
                             onClick={nextStep}
                             disabled={isProcessing}
-                            className="bg-foreground text-background px-8 py-4 uppercase tracking-widest font-semibold hover:bg-accent hover:text-foreground transition-all disabled:opacity-50 min-w-[200px] flex justify-center"
+                            className="bg-foreground text-background px-8 py-4 uppercase tracking-widest font-semibold hover:bg-[#D4AF37] hover:text-black transition-all disabled:opacity-50 min-w-[200px] flex justify-center"
                         >
-                            {isProcessing ? <SpinnerGap size={24} className="animate-spin" /> : (step === 2 ? `Pay Rs. ${total().toLocaleString()}` : "Continue")}
+                            {isProcessing ? <SpinnerGap size={24} className="animate-spin" /> : (step === 2 ? `Pay Rs. ${useCartStore.getState().total().toLocaleString()}` : "Continue")}
                         </button>
                     ) : (
                         <button

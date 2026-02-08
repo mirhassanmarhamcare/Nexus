@@ -8,12 +8,12 @@ import CategoriesSection from "@/components/sections/CategoriesSection";
 import TopSellersSection from "@/components/sections/TopSellersSection";
 import CTASection from "@/components/sections/CTASection";
 import Footer from "@/components/sections/Footer";
-import Loader from "@/components/ui/Loader";
+
 
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <Loader />
+
       <Navbar />
       <Hero />
       <FeaturesSection />

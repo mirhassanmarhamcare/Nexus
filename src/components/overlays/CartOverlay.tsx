@@ -70,16 +70,73 @@ export default function CartOverlay() {
                 )}
             </div>
 
-            <div className="cart-footer mt-auto border-t border-white/15 pt-8">
-                <div className="cart-total flex justify-between text-[1.5rem] mb-8 font-display">
-                    <span>Total</span>
-                    <span>Rs. {total().toLocaleString()}</span>
+            <div className="cart-footer mt-auto border-t border-white/15 pt-8 space-y-6">
+                {/* Promo Code Input */}
+                {items.length > 0 && (
+                    <div className="promo-section">
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                placeholder="PROMO CODE"
+                                id="promo-input"
+                                className="bg-transparent border border-white/10 p-2 text-[10px] font-mono w-full uppercase outline-none focus:border-accent"
+                            />
+                            <button
+                                onClick={async () => {
+                                    const code = (document.getElementById('promo-input') as HTMLInputElement).value;
+                                    if (!code) return;
+                                    try {
+                                        const res = await fetch("/api/promos/validate", {
+                                            method: "POST",
+                                            body: JSON.stringify({ code, cartTotal: useCartStore.getState().subtotal() })
+                                        });
+                                        const data = await res.json();
+                                        if (data.valid) {
+                                            useCartStore.getState().applyPromo(data.promo);
+                                            showToast(`Promo Applied: ${data.promo.code}`);
+                                        } else {
+                                            showToast(data.error || "Invalid code");
+                                        }
+                                    } catch (err) {
+                                        showToast("Connection failed");
+                                    }
+                                }}
+                                className="px-4 py-2 bg-white/5 border border-white/10 text-[10px] uppercase font-black hover:bg-white/10 transition-all"
+                            >
+                                Apply
+                            </button>
+                        </div>
+                        {useCartStore.getState().appliedPromo && (
+                            <div className="mt-2 flex justify-between items-center bg-accent/10 p-2 border border-accent/20 rounded-sm">
+                                <span className="text-[10px] font-mono text-accent">{useCartStore.getState().appliedPromo?.code} ACTIVE</span>
+                                <button onClick={() => useCartStore.getState().applyPromo(null)} className="text-[10px] text-accent/50 hover:text-accent">Remove</button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                <div className="cart-total-details space-y-2">
+                    <div className="flex justify-between text-[0.8rem] text-muted font-display uppercase tracking-widest">
+                        <span>Subtotal</span>
+                        <span>Rs. {useCartStore.getState().subtotal().toLocaleString()}</span>
+                    </div>
+                    {useCartStore.getState().discount() > 0 && (
+                        <div className="flex justify-between text-[0.8rem] text-accent font-display uppercase tracking-widest">
+                            <span>Discount</span>
+                            <span>- Rs. {useCartStore.getState().discount().toLocaleString()}</span>
+                        </div>
+                    )}
+                    <div className="flex justify-between text-[1.5rem] pt-4 border-t border-white/5 font-display">
+                        <span>Total</span>
+                        <span>Rs. {useCartStore.getState().total().toLocaleString()}</span>
+                    </div>
                 </div>
+
                 <button
                     className="checkout-btn hoverable w-full bg-foreground text-background p-4 font-semibold uppercase border-none cursor-none"
                     onClick={() => {
                         toggleCart();
-                        setTimeout(() => useUIStore.getState().toggleCheckout(), 300); // Slight delay for smooth transition
+                        setTimeout(() => useUIStore.getState().toggleCheckout(), 300);
                     }}
                 >
                     Checkout

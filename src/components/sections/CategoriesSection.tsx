@@ -83,7 +83,7 @@ export default function CategoriesSection() {
                     onClick={() => router.push('/shop')}
                     className="cursor-pointer"
                 >
-                    <button className="px-8 py-3 border border-white/20 hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-500 rounded-sm text-sm uppercase tracking-[0.2em] backdrop-blur-sm">
+                    <button className="px-8 py-3 border border-border hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-500 rounded-sm text-sm uppercase tracking-[0.2em] backdrop-blur-sm">
                         Explore More Categories
                     </button>
                 </div>

@@ -13,7 +13,9 @@ import AuthModal from "@/components/overlays/AuthModal";
 import MenuOverlay from "@/components/overlays/MenuOverlay";
 import ProductDetailOverlay from "@/components/overlays/ProductDetailOverlay";
 import CheckoutOverlay from "@/components/overlays/CheckoutOverlay";
-import Preloader from "@/components/ui/Preloader";
+
+import SettingsSync from "@/components/ui/SettingsSync";
+
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-main" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-display" });
@@ -29,19 +31,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" data-theme="dark" className={`${inter.variable} ${playfair.variable}`}>
       <body className="antialiased bg-background text-foreground overflow-x-hidden selection:bg-accent selection:text-black">
         <SmoothScroll>
           <div className="relative">
             {/* Global UI */}
             <CustomCursor />
+            <SettingsSync />
             <GrainOverlay />
             <ThemeSync />
             <BackgroundGradients />
             <Toast />
 
             {/* Overlays */}
-            <Preloader />
+
             <CartOverlay />
             <SearchOverlay />
             <AuthModal />

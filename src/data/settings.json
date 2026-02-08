@@ -1,0 +1,13 @@
+{
+  "storeName": "NEXUS",
+  "announcement": "FREE SHIPPING ON ALL ORDERS OVER RS. 5000 - SHOP NOW",
+  "whatsapp": "923123456789",
+  "email": "support@nexus.com",
+  "instagram": "https://instagram.com/nexus",
+  "facebook": "https://facebook.com/nexus",
+  "freeShippingThreshold": 5000,
+  "currency": "PKR (Rs)",
+  "theme": "dark",
+  "maintenanceMode": false,
+  "stagingMarquee": true
+}

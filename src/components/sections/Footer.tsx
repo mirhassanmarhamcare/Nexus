@@ -8,12 +8,14 @@ import { useUIStore } from "@/store/ui.store";
 import { useToastStore } from "@/store/toast.store";
 import { ArrowRight } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useSettingsStore } from "@/store/settings.store";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
     const containerRef = useRef<HTMLElement>(null);
     const { openPage } = useUIStore();
+    const { settings } = useSettingsStore();
     const { showToast } = useToastStore();
     const year = new Date().getFullYear();
 
@@ -94,16 +96,20 @@ export default function Footer() {
                 </div>
 
                 <div className="footer-bottom">
-                    <span className="pl-16 md:pl-0">&copy; {year} NEXUS Commerce. All Rights Reserved.</span>
+                    <span className="pl-16 md:pl-0 font-mono text-[9px] tracking-widest uppercase">&copy; {year} {settings?.storeName || "NEXUS"} ATELIER.</span>
                     <div className="flex gap-8">
-                        <span className="hoverable cursor-none" onClick={() => showToast('Instagram Link')}>INSTAGRAM</span>
-                        <span className="hoverable cursor-none" onClick={() => showToast('Twitter Link')}>TWITTER</span>
-                        <span className="hoverable cursor-none" onClick={() => showToast('LinkedIn Link')}>LINKEDIN</span>
+                        {settings?.instagram && (
+                            <a href={settings.instagram} target="_blank" className="hoverable cursor-none hover:text-accent font-mono text-[9px] tracking-widest uppercase">INSTAGRAM</a>
+                        )}
+                        {settings?.facebook && (
+                            <a href={settings.facebook} target="_blank" className="hoverable cursor-none hover:text-accent font-mono text-[9px] tracking-widest uppercase">FACEBOOK</a>
+                        )}
+                        <span className="hoverable cursor-none hover:text-accent font-mono text-[9px] tracking-widest uppercase" onClick={() => showToast('Inquiry Received')}>GLOBAL</span>
                     </div>
                 </div>
             </div>
             <h1 className="footer-huge-text">
-                NEXUS
+                {settings?.storeName || "NEXUS"}
             </h1>
         </footer>
     );

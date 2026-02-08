@@ -182,6 +182,31 @@ export default function ProductDetailOverlay() {
                                     {activeProduct?.description || "Meticulously engineered for the modern vanguard. This limited edition piece combines proprietary materials with artisanal craftsmanship."}
                                 </p>
 
+                                {/* Specifications Section */}
+                                <div className="space-y-4 mt-8 pt-8 border-t border-white/5">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#D4AF37]">Specifications</h4>
+                                    <div className="grid grid-cols-1 gap-y-3">
+                                        {activeProduct?.material && (
+                                            <div className="flex gap-4">
+                                                <span className="text-[9px] uppercase tracking-widest text-gray-500 w-24 shrink-0 font-mono">Composition:</span>
+                                                <span className="text-xs text-white">{activeProduct.material}</span>
+                                            </div>
+                                        )}
+                                        {activeProduct?.deliveryTime && (
+                                            <div className="flex gap-4">
+                                                <span className="text-[9px] uppercase tracking-widest text-gray-500 w-24 shrink-0 font-mono">Logistics:</span>
+                                                <span className="text-xs text-white">{activeProduct.deliveryTime}</span>
+                                            </div>
+                                        )}
+                                        {activeProduct?.careInstructions && (
+                                            <div className="flex gap-4">
+                                                <span className="text-[9px] uppercase tracking-widest text-gray-500 w-24 shrink-0 font-mono">Maintenance:</span>
+                                                <span className="text-xs text-white leading-relaxed">{activeProduct.careInstructions}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
                                 {activeProduct?.details && (
                                     <div className="grid grid-cols-1 gap-y-2 text-sm mt-6 border-t border-white/10 pt-4">
                                         {Object.entries(activeProduct.details).map(([key, value]) => (
@@ -203,10 +228,14 @@ export default function ProductDetailOverlay() {
                             <div className="flex gap-4 pt-8 product-anim-item border-t border-white/10 mt-auto">
                                 <button
                                     onClick={handleAddToCart}
-                                    className="flex-1 bg-foreground text-background py-4 uppercase tracking-widest text-sm hover:bg-accent hover:text-foreground transition-colors cursor-none flex items-center justify-center gap-2"
+                                    disabled={activeProduct?.inStock === false}
+                                    className={`flex-1 py-4 uppercase tracking-[0.3em] text-[10px] font-black transition-all cursor-none flex items-center justify-center gap-4 ${activeProduct?.inStock !== false
+                                            ? "bg-foreground text-background hover:bg-accent hover:text-foreground"
+                                            : "bg-zinc-800 text-gray-500 border border-white/5 cursor-not-allowed"
+                                        }`}
                                 >
-                                    <span>Add to Cart</span>
-                                    <ArrowRight size={16} />
+                                    <span>{activeProduct?.inStock !== false ? "Commit to Cart" : "Sold Out"}</span>
+                                    {activeProduct?.inStock !== false && <ArrowRight size={14} />}
                                 </button>
                             </div>
 

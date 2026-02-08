@@ -7,20 +7,11 @@ import Image from "next/image";
 import { useState, useMemo } from "react";
 import MagneticButton from "@/components/ui/MagneticButton";
 
-const CATEGORIES = [
-    'All',
-    'Women Handbags',
-    'Watches',
-    'Home Decor',
-    'Home Cleaning',
-    'Men & Women Watches',
-    'Couple Watches',
-    'Jewelry',
-    'Wallet',
-    'Bras',
-    'Night Suit',
-    'Rings'
-];
+import categoriesData from "@/data/categories.json";
+
+const CATEGORIES = categoriesData
+    .sort((a, b) => a.order - b.order)
+    .map(c => c.name);
 
 export default function ShopPage() {
     const { openProduct } = useUIStore();
@@ -28,8 +19,11 @@ export default function ShopPage() {
     const [visibleCount, setVisibleCount] = useState(10);
 
     const filteredProducts = useMemo(() => {
-        if (selectedCategory === "All") return productsDB;
-        return productsDB.filter(p => p.category === selectedCategory);
+        const now = new Date();
+        const available = productsDB.filter(p => !p.isDrop || (p.dropDate && new Date(p.dropDate) <= now));
+
+        if (selectedCategory === "All") return available;
+        return available.filter(p => p.category === selectedCategory);
     }, [selectedCategory]);
 
     const displayProducts = filteredProducts.slice(0, visibleCount);

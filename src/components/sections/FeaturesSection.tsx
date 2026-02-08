@@ -54,11 +54,11 @@ export default function FeaturesSection() {
     ];
 
     return (
-        <section ref={containerRef} className="features-section py-20 relative z-[5] bg-background border-b border-white/5">
+        <section ref={containerRef} className="features-section py-20 relative z-[5] bg-background border-b border-border">
             <div className="container mx-auto px-8 max-w-[1400px]">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {features.map((feature, i) => (
-                        <div key={i} className="feature-item flex flex-col items-center text-center gap-4 p-4 hover:bg-white/5 transition-colors duration-300 rounded-sm">
+                        <div key={i} className="feature-item flex flex-col items-center text-center gap-4 p-4 hover:bg-accent/5 transition-colors duration-300 rounded-sm group">
                             <feature.icon size={48} className="text-accent mb-2" weight="light" />
                             <div>
                                 <h3 className="text-lg font-medium mb-1">{feature.title}</h3>

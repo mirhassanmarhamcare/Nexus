@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { Octokit } from 'octokit';
+import fs from 'fs/promises';
+import path from 'path';
 import draftsData from '@/data/drafts.json';
 
 export async function POST(request: Request) {
@@ -15,8 +17,22 @@ export async function POST(request: Request) {
     const REPO_OWNER = process.env.REPO_OWNER;
     const REPO_NAME = process.env.REPO_NAME;
 
+    const draftsPath = path.join(process.cwd(), 'src', 'data', 'drafts.json');
+    const prodPath = path.join(process.cwd(), 'src', 'data', 'products.json');
+
+    // LOCAL FALLBACK: If GitHub vars are missing, sync locally
     if (!GITHUB_TOKEN || !REPO_OWNER || !REPO_NAME) {
-        return NextResponse.json({ error: "Server misconfiguration: Missing GitHub Env Vars" }, { status: 500 });
+        console.warn("GitHub Env Vars missing - falling back to local sync");
+        try {
+            const draftsContent = await fs.readFile(draftsPath, 'utf-8');
+            await fs.writeFile(prodPath, draftsContent);
+            return NextResponse.json({
+                success: true,
+                message: "Local sync successful (GitHub variables missing, updated local products.json instead)"
+            });
+        } catch (err: any) {
+            return NextResponse.json({ error: "Local sync failed: " + err.message }, { status: 500 });
+        }
     }
 
     try {

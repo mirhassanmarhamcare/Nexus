@@ -1,0 +1,27 @@
+[
+  {
+    "id": "all",
+    "name": "All",
+    "order": 0
+  },
+  {
+    "id": "men-wallets",
+    "name": "Men Wallets",
+    "order": 1
+  },
+  {
+    "id": "women-handbags",
+    "name": "Women Handbags",
+    "order": 2
+  },
+  {
+    "id": "men-shoes",
+    "name": "Men Shoes",
+    "order": 3
+  },
+  {
+    "id": "jewelry",
+    "name": "Jewelry",
+    "order": 4
+  }
+]

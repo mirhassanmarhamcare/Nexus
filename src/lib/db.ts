@@ -59,6 +59,16 @@ export const db = {
             db.orders.push(order);
             await saveDB(db);
             return order;
+        },
+        update: async (id: string, updates: Partial<Order>) => {
+            const db = await getDB();
+            const index = db.orders.findIndex(o => o.id === id);
+            if (index !== -1) {
+                db.orders[index] = { ...db.orders[index], ...updates };
+                await saveDB(db);
+                return db.orders[index];
+            }
+            return null;
         }
     }
 };
